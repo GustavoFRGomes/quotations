@@ -36,5 +36,11 @@ class SplashScreenFragment: Fragment() {
         })
     }
 
+    companion object {
+        @JvmStatic
+        fun newInstance(): SplashScreenFragment {
+            return SplashScreenFragment()
+        }
+    }
 
 }

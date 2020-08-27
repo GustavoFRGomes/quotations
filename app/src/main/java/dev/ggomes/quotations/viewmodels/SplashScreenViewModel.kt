@@ -19,7 +19,7 @@ class SplashScreenViewModel: ViewModel() {
 
     fun getRandomQuote(): LiveData<Quote> {
         // TODO: Add the request to the repository (both DB and Network)
-        _quoteLiveData.value = Quote("ID", "This is the most inspirational quote every!", "Will Northman")
+        _quoteLiveData.value = Quote("ID", "This is the most inspirational quote ever!", "Will Northman")
 
         return _quoteLiveData
     }
@@ -28,7 +28,7 @@ class SplashScreenViewModel: ViewModel() {
         val delayNavigationLiveData = MutableLiveData<Unit>()
 
         Observable.just(1)
-            .delay(4, TimeUnit.SECONDS)
+            .delay(10, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.computation())
             .subscribe {
