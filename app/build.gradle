@@ -14,6 +14,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField 'String', 'API_KEY', '\"bcb3731fec6045f148f53090eda0f4e2\"'
     }
 
     buildTypes {
@@ -46,16 +48,20 @@ dependencies {
 
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    implementation 'io.reactivex.rxjava3:rxjava:3.0.6'
+    //implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    //implementation 'io.reactivex.rxjava3:rxjava:3.0.6'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
+    implementation "com.squareup.okhttp3:okhttp:4.8.1"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
-    implementation "io.reactivex.rxjava3:rxjava:3.0.6"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
 }

@@ -2,24 +2,42 @@ package dev.ggomes.quotations.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import dev.ggomes.quotations.base.BaseViewModel
+import dev.ggomes.quotations.data.FavQsRepository
+import dev.ggomes.quotations.data.networking.RetrofitClient
 import dev.ggomes.quotations.models.Quote
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.Observable
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-class SplashScreenViewModel: ViewModel() {
+class SplashScreenViewModel: BaseViewModel() {
 
-    private val _errorLiveData = MutableLiveData<Exception>()
-    val errorLiveData: LiveData<Exception> = _errorLiveData
+    // TODO: Inject instead of initializing here.
+    private val repository = FavQsRepository(RetrofitClient.api)
+
+    private val _errorLiveData = MutableLiveData<Error>()
+    val errorLiveData: LiveData<Error> = _errorLiveData
 
     private val _quoteLiveData = MutableLiveData<Quote>()
 
     fun getRandomQuote(): LiveData<Quote> {
-        // TODO: Add the request to the repository (both DB and Network)
-        _quoteLiveData.value = Quote("ID", "This is the most inspirational quote ever!", "Will Northman")
+        repository.getRandomQuote()
+            .subscribe(object: SingleObserver<Quote> {
+                override fun onSuccess(t: Quote) {
+                    _quoteLiveData.value = t
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+                    _errorLiveData.value = Error(e.message)
+                }
+            })
 
         return _quoteLiveData
     }
@@ -27,13 +45,13 @@ class SplashScreenViewModel: ViewModel() {
     fun delayMoveToNextScreenBy(seconds: Int): LiveData<Unit> {
         val delayNavigationLiveData = MutableLiveData<Unit>()
 
-        Observable.just(1)
+        compositeDisposable.add(Observable.just(1)
             .delay(seconds.toLong(), TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.computation())
             .subscribe {
                 delayNavigationLiveData.value = Unit
-            }
+            })
 
         return delayNavigationLiveData
     }

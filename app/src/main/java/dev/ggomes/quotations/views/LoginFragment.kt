@@ -40,7 +40,6 @@ class LoginFragment: Fragment() {
                 viewModel.login(
                     username_edittext.text.toString(),
                     password_edittext.text.toString()).observe(viewLifecycleOwner, Observer {
-
                         if (it)
                             requireActivity().onBackPressed()
                         else

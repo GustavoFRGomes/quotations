@@ -4,7 +4,7 @@ import dev.ggomes.quotations.data.networking.requestmodels.SessionRequest
 import dev.ggomes.quotations.data.networking.responsemodels.QuotesResponse
 import dev.ggomes.quotations.data.networking.responsemodels.UserProfileResponse
 import dev.ggomes.quotations.data.networking.responsemodels.UserSessionResponse
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.Single
 import retrofit2.http.*
 
 interface FavQsApi {
@@ -19,7 +19,10 @@ interface FavQsApi {
     fun getRandomQuoteList(): Single<QuotesResponse>
 
     @GET("quotes")
-    fun getQuotesBy(@Query("filter") query: String,
+    fun searchQuotes(@Query("filter") query: String): Single<QuotesResponse>
+
+    @GET("quotes")
+    fun searchQuotesBy(@Query("filter") query: String,
                     @Query("type") type: String = "tag"): Single<QuotesResponse>
 
     @PUT("quotes/{id}/fav")

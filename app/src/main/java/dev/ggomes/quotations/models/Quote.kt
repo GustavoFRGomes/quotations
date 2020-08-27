@@ -4,7 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Quote(
-    val id: String?,
-    val body: String?,
-    val author: String?
+    val id: String,
+    val body: String,
+    val author: String,
+    val tags: List<String>
 )
