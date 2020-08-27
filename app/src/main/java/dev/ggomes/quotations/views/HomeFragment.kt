@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -12,6 +14,7 @@ import dev.ggomes.quotations.MainActivity
 import dev.ggomes.quotations.R
 import dev.ggomes.quotations.adapters.QuotesRecyclerViewAdapter
 import dev.ggomes.quotations.models.Quote
+import dev.ggomes.quotations.viewmodels.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment: Fragment() {
@@ -33,8 +36,24 @@ class HomeFragment: Fragment() {
         username_textview.setOnClickListener { onUserViewsClicked() }
 
         val dummyList = (0..90).toList().map { index ->
-            Quote(index.toString(), "#$index This is the most inspirational quote ever!", "Will Northman")
+            Quote(index.toString(), "#$index This is the most inspirational quote ever!", "Will Northman", emptyList())
         }
+
+        quotes_recyclerview.apply {
+            layoutManager = LinearLayoutManager(
+                requireContext(), RecyclerView.VERTICAL, false)
+        }
+
+        val viewModel: HomeViewModel by viewModels()
+
+        viewModel.errorLiveData.observe(viewLifecycleOwner, Observer { onError(it) })
+
+        viewModel.getPublicQuotes().observe(viewLifecycleOwner, Observer {
+            if (quotes_recyclerview.adapter == null)
+                quotes_recyclerview.adapter = QuotesRecyclerViewAdapter(it.toMutableList(), ::onQuoteClicked)
+            else
+                (quotes_recyclerview.adapter as QuotesRecyclerViewAdapter).addItems(it)
+        })
 
         username_textview.text = "Gustavo"
         Glide.with(this)
@@ -42,13 +61,6 @@ class HomeFragment: Fragment() {
             .centerCrop()
             .into(user_avatar_imageview)
             //.placeholder()
-
-        quotes_recyclerview.apply {
-            layoutManager = LinearLayoutManager(
-                requireContext(), RecyclerView.VERTICAL, false)
-
-            adapter = QuotesRecyclerViewAdapter(dummyList, ::onQuoteClicked)
-        }
     }
 
     private fun onQuoteClicked(quote: Quote) {
@@ -60,6 +72,10 @@ class HomeFragment: Fragment() {
                        else LoginFragment.newInstance()
 
         (activity as MainActivity).pushFragment(fragment)
+    }
+
+    private fun onError(error: Error) {
+
     }
 
     companion object {
