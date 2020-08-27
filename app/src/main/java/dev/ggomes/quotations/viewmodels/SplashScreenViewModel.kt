@@ -24,11 +24,11 @@ class SplashScreenViewModel: ViewModel() {
         return _quoteLiveData
     }
 
-    fun delayMoveToNextScreen(): LiveData<Unit> {
+    fun delayMoveToNextScreenBy(seconds: Int): LiveData<Unit> {
         val delayNavigationLiveData = MutableLiveData<Unit>()
 
         Observable.just(1)
-            .delay(10, TimeUnit.SECONDS)
+            .delay(seconds.toLong(), TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.computation())
             .subscribe {

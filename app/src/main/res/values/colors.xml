@@ -3,4 +3,14 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <!--
+    <color name="background">#f7f8fb</color>
+    -->
+    <color name="background">#000</color>
+    <color name="divisor_color">#d7d8db</color>
+    <color name="inverted_background">#FFF</color>
+    <color name="text_color_primary">#FFF</color>
+    <color name="text_color_secundary">#AAA</color>
+    <color name="list_item_background">@color/divisor_color</color>
 </resources>

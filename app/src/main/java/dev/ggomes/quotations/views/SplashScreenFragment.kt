@@ -31,7 +31,7 @@ class SplashScreenFragment: Fragment() {
             author_textview.text = quote.author
         })
 
-        viewModel.delayMoveToNextScreen().observe(viewLifecycleOwner, Observer {
+        viewModel.delayMoveToNextScreenBy(5).observe(viewLifecycleOwner, Observer {
             (activity as MainActivity).setFragment(HomeFragment.newInstance())
         })
     }
