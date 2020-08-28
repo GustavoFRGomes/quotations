@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dev.ggomes.quotations.base.BaseViewModel
 import dev.ggomes.quotations.data.FavQsRepository
+import dev.ggomes.quotations.data.db.AppDatabase
 import dev.ggomes.quotations.data.networking.RetrofitClient
 import dev.ggomes.quotations.models.Quote
 import io.reactivex.Observable
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit
 class SplashScreenViewModel: BaseViewModel() {
 
     // TODO: Inject instead of initializing here.
-    private val repository = FavQsRepository(RetrofitClient.api)
+    private val repository = FavQsRepository(RetrofitClient.api, AppDatabase.database)
 
     private val _errorLiveData = MutableLiveData<Error>()
     val errorLiveData: LiveData<Error> = _errorLiveData

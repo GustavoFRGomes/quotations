@@ -1,5 +1,6 @@
 package dev.ggomes.quotations.data
 
+import dev.ggomes.quotations.data.db.AppDatabase
 import dev.ggomes.quotations.data.networking.FavQsApi
 import dev.ggomes.quotations.data.networking.requestmodels.SessionRequest
 import dev.ggomes.quotations.data.networking.responsemodels.QuotesResponse
@@ -11,16 +12,26 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class FavQsRepository(private val api: FavQsApi) {
+class FavQsRepository(private val api: FavQsApi, private val db: AppDatabase) {
 
-    fun login(username: String, password: String): Single<UserSessionResponse> {
+    fun login(username: String, password: String): Observable<UserSession> {
         return api.createSession(SessionRequest(SessionRequest.User(username, password)))
             .subscribeOn(Schedulers.io())
+            .flatMapObservable {
+                val userSession = UserSession(it.username!!,
+                    "",
+                    it.email!!,
+                    false)
+
+                db.sessionDao().saveUser(userSession)
+
+                Observable.just(userSession)
+            }
     }
 
     fun getRandomQuote(): Single<Quote> {
         return Observable.just(
-            Quote("ID",
+            Quote(9102,
             "This is the most inspirational quote ever!",
             "Will Northman",
             emptyList()))
@@ -36,7 +47,7 @@ class FavQsRepository(private val api: FavQsApi) {
                 it.quotes.filter { quote ->
                     quote.id != null && quote.body != null && quote.author != null && quote.tags != null
                 }.map { responseItem ->
-                    Quote(responseItem.id!!.toString(),
+                    Quote(responseItem.id!!,
                         responseItem.body!!,
                         responseItem.author!!,
                         responseItem.tags!!)

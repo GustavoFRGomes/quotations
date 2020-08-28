@@ -35,10 +35,6 @@ class HomeFragment: Fragment() {
         user_avatar_imageview.setOnClickListener { onUserViewsClicked() }
         username_textview.setOnClickListener { onUserViewsClicked() }
 
-        val dummyList = (0..90).toList().map { index ->
-            Quote(index.toString(), "#$index This is the most inspirational quote ever!", "Will Northman", emptyList())
-        }
-
         quotes_recyclerview.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(), RecyclerView.VERTICAL, false)
